@@ -1,0 +1,163 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courier Tracking</title>
+    @* <link rel="stylesheet" href="styles.css"> *@
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .tracking-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        #trackingForm {
+            margin-bottom: 20px;
+        }
+
+        #trackingNumber {
+            padding: 10px;
+            width: calc(100% - 24px);
+            margin-bottom: 10px;
+        }
+
+        #trackingForm button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            #trackingForm button:disabled {
+                background-color: #ddd;
+                cursor: not-allowed;
+            }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            position: relative;
+            flex: 1;
+            padding: 10px;
+        }
+
+        .step-icon {
+            background-color: #ddd;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            font-weight: bold;
+        }
+
+        .step.active .step-icon {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .step p {
+            margin: 10px 0 0;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="tracking-container">
+        <h1>Courier Tracking</h1>
+        <form id="trackingForm">
+            <input type="text" id="trackingNumber" placeholder="Enter Tracking Number" required>
+            <button type="submit">Search</button>
+        </form>
+        <div class="steps">
+            <div class="step" id="step1">
+                <div class="step-icon">1</div>
+                <p>Order Placed</p>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-icon">2</div>
+                <p>Shipment</p>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-icon">3</div>
+                <p>Received</p>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-icon">4</div>
+                <p>Delivery</p>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#trackingForm").submit(function (event) {
+                event.preventDefault();
+                const trackingNumber = $("#trackingNumber").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetTrackingStatus", "CustomerTracking")",
+                    data: { trackingNumber: trackingNumber },
+                    success: function (response) {
+                        const stepsStatus = response;
+                        let currentStep = 0;
+                        const steps = $(".step");
+
+                        function updateSteps() {
+                            steps.removeClass("active");
+                            steps.each(function (index) {
+                                if (index <= currentStep) {
+                                    $(this).addClass("active");
+                                }
+                            });
+                        }
+
+                        function progressSteps() {
+                            for (let i = 0; i < stepsStatus.length; i++) {
+                                if (stepsStatus[i]) {
+                                    currentStep = i;
+                                    updateSteps();
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+
+                        progressSteps();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

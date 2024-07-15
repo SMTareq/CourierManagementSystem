@@ -1,0 +1,257 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div id="vc_app">
+    <div class="container-fluid" id="appD">
+        <div class="card mt-2">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h5 class="mr-auto">Order Delivery</h5>
+                </div>
+            </div>
+            @*     <div class="card-body">
+            <div class="col-12">
+            <div class="row mb-3">
+            <div class="input-group input-group-sm" style="width: 400px">
+            <div class="input-group-prepend">
+            <label class="input-group-text" for="balanceSheetDropdown">Game Portal</label>
+            </div>
+            <select class="custom-select" id="portalId" v-model="selectedGamePortal">
+            <option value="1">Play2Win</option>
+            </select>
+            </div>
+            <button style="margin-left: 10px" class="btn btn-info btn-sm" @@click="getData()">Search</button>
+            </div>
+            </div>
+            </div> *@
+
+        </div>
+        <div class="card mt-2" v-cloak>
+            <div class="card-body">
+                <div class="col-12">
+                    <div class="table-responsive mt-2" style="overflow-x: auto;">
+
+
+                        <table class="table table-bordered table-striped" id="gameTable" style="table-layout: fixed;">
+
+                            <thead>
+                                <tr>
+                                    <th>Order Number</th>
+                                    <th>Order Date</th>
+                                    <th>Percel Desc.</th>
+                                    <th>Sender Name</th>
+                                    <th>Address</th>
+                                    <th>Contact</th>
+                                    <th>Recipient Name</th>
+                                    <th>Address</th>
+                                    <th>Contact</th>
+
+                                    <th style="width:7%">Status</th>
+                                    <th style="width:7%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in patchList" :key="item.id">
+                                    <td>{{item.orderId}}</td>
+                                    <td>{{item.orderDate}}</td>
+                                    <td>{{item.parcelDescription}}</td>
+
+                                    <td>{{item.senderName}}</td>
+                                    <td>{{item.senderAddress}}</td>
+                                    <td>{{item.senderContact}}</td>
+
+                                    <td>{{item.recipientName}}</td>
+                                    <td>{{item.recipientAddress}}</td>
+                                    <td>{{item.recipientContact}}</td>
+                                    <td>
+                                        <span v-if="item.isActive==true" class="label label-success">Active</span>
+                                        <span v-if="item.isActive==false" class="label label-warning">InActive</span>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:;" v-on:click="editGame(item)"><i class="fa-solid fa-truck-fast"></i></a>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="mdl_game" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Order Info</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <form action="javascript:;" data-vv-scope="frmgame">
+                                    <div class="form-row">
+                                        <div class="row col-12">
+
+                                            <div class="col">
+
+                                                <template>
+                                                    <div>
+
+
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span style="font-size: 14px" class="input-group-text">Sender Name</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" placeholder="Sender Name" v-model="itemG.senderName">
+                                                        </div>
+
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span style="font-size: 14px" class="input-group-text">Sender Address</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" placeholder="Sender Address" v-model="itemG.senderAddress">
+                                                        </div>
+
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span style="font-size: 14px" class="input-group-text">Sender Contact</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" placeholder="Sender Contact" v-model="itemG.senderContact">
+                                                        </div>
+
+                                                    </div>
+                                                </template>
+
+                                            </div>
+
+                                            <div class="col">
+                                                <template>
+                                                    <div>
+
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span style="font-size: 14px" class="input-group-text">Recipient Name</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" placeholder="Recipient Name" v-model="itemG.recipientName">
+                                                        </div>
+
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span style="font-size: 14px" class="input-group-text">Recipient Address</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" placeholder="Recipient Address" v-model="itemG.recipientAddress">
+                                                        </div>
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span style="font-size: 14px" class="input-group-text">Recipient Contact</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" placeholder="Recipient Contact" v-model="itemG.recipientContact">
+                                                        </div>
+
+                                                    </div>
+                                                </template>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row col-12">
+                                            <div class="col">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span style="font-size:14px" class="input-group-text">Parcel Description</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" v-model="itemG.parcelDescription" placeholder="Parcel Description">
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" v-on:click="UpdateGame"><i class="far fa-save"></i> Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+@section scripts{
+    <script>
+        var app = new Vue({
+            el: '#vc_app',
+            data() {
+                return {
+                    selectedGamePortal: 1,
+                    billboardData: [],
+                    searchTerm: '',
+                    itemG: {},
+                    games: [],
+                    gameSearchTerm: '',
+                    lastSelectedGame: '',
+                    patchList: []
+
+                };
+            },
+
+            computed: {
+            },
+            methods: {
+                getData() {
+                    helper.get('/OrderDelivery/GetReceivedOrderList',
+                        {},
+                        (response) => {
+                            console.log(response);
+                            this.patchList = response;
+
+                        });
+                },
+                editGame(game) {
+
+                    this.itemG = game;
+
+                    $('#mdl_game').modal('show');
+
+                },
+
+                AddBillboard() {
+                    this.itemG = {};
+                    $('#mdl_game').modal('show');
+                },
+             
+                UpdateGame() {
+                    helper.post('/OrderDelivery/SaveOrderDelivery', this.itemG, (response) => {
+                        if (response) {
+                            this.getData();
+                            $('#mdl_game').modal('hide');
+                        }
+                        else {
+                            $.notify(response.message, 'error');
+                        }
+                    });
+                },
+            },
+
+            mounted() {
+                this.getData();
+                // this.getGameCategory();
+            },
+
+        });
+    </script>
+}
+

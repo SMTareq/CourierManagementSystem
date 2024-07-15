@@ -1,0 +1,105 @@
+﻿<div id="vc_app">
+<div class="container-fluid p-3" >
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+
+            <div class="small-box" style="background-color : aliceblue">
+                <div class="inner">
+                        <h3>{{ DashBoard.totalCustomer }}</h3>
+                    <p>Total Customer </p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-bag"></i>
+                </div>
+                <a href="#" class="small-box-footer" style="color:black">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+
+            <div class="small-box">
+                <div class="inner">
+                    <h3>{{DashBoard.totalOrder}}</h3>
+                    <p>Total Order</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="#" class="small-box-footer" style="color:black">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+
+            <div class="small-box" style="background-color : aliceblue">
+                <div class="inner">
+                        <h3>{{DashBoard.totalShipment}}</h3>
+                 
+                    <p>Total Shipment</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+                <a href="#" class="small-box-footer" style="color:black">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-xs-6">
+
+            <div class="small-box" style="background-color : cornsilk">
+                <div class="inner">
+                        <h3>{{DashBoard.totalDelivery}}</h3>
+                    <p>Total Delivery</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a href="#" class="small-box-footer" style="color:black">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</div>
+
+            
+@section scripts{
+    <script>
+        var app = new Vue({
+            el: '#vc_app',
+            data() {
+                return {
+                 DashBoard : []
+                };
+            },
+
+            computed: {
+           
+            },
+            methods: {
+                getData() {
+                    helper.get('/Dashboard/GetDashBoardInfo',
+                        {},
+                        (response) => {
+                           
+                            this.DashBoard = response;
+
+                            console.log(this.DashBoard)
+
+                        });
+                },
+                                                                                                
+            },     
+            mounted() {
+               this.getData();
+
+                helper.blockUI();
+                helper.unBlockUI();
+           
+            },
+
+        });
+      
+    </script>
+    }
